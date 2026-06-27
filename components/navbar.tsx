@@ -1,15 +1,33 @@
 'use client'
 
 import { Search, ShoppingCart, SlidersHorizontal, ShoppingBag } from 'lucide-react'
+import { FilterPanel } from '@/components/filter-panel'
 
 interface NavbarProps {
   cartCount: number
   onCartOpen: () => void
   searchQuery: string
   onSearchChange: (query: string) => void
+  filterOpen: boolean
+  onToggleFilter: () => void
+  filterActive: boolean
+  maxPrice: number
+  location: string
+  onApplyFilter: (maxPrice: number, location: string) => void
 }
 
-export function Navbar({ cartCount, onCartOpen, searchQuery, onSearchChange }: NavbarProps) {
+export function Navbar({
+  cartCount,
+  onCartOpen,
+  searchQuery,
+  onSearchChange,
+  filterOpen,
+  onToggleFilter,
+  filterActive,
+  maxPrice,
+  location,
+  onApplyFilter,
+}: NavbarProps) {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-gray-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -40,8 +58,19 @@ export function Navbar({ cartCount, onCartOpen, searchQuery, onSearchChange }: N
 
           {/* Right actions */}
           <div className="ml-auto flex items-center gap-2">
-            <button className="w-9 h-9 flex items-center justify-center rounded-xl text-gray-500 hover:bg-orange-50 hover:text-orange-500 transition-colors">
+            <button
+              onClick={onToggleFilter}
+              aria-pressed={filterOpen}
+              className={`relative w-9 h-9 flex items-center justify-center rounded-xl transition-colors ${
+                filterOpen || filterActive
+                  ? 'bg-orange-500 text-white shadow-md shadow-orange-200'
+                  : 'text-gray-500 hover:bg-orange-50 hover:text-orange-500'
+              }`}
+            >
               <SlidersHorizontal className="w-5 h-5" />
+              {filterActive && !filterOpen && (
+                <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white" />
+              )}
               <span className="sr-only">Bộ lọc</span>
             </button>
 
@@ -78,6 +107,15 @@ export function Navbar({ cartCount, onCartOpen, searchQuery, onSearchChange }: N
             />
           </div>
         </div>
+
+        {/* Filter panel */}
+        {filterOpen && (
+          <FilterPanel
+            maxPrice={maxPrice}
+            location={location}
+            onApply={onApplyFilter}
+          />
+        )}
       </div>
     </header>
   )

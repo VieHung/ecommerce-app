@@ -52,7 +52,8 @@ export function CartView({ items, onBack, onRemoveItem }: CartViewProps) {
 
   const subtotal = items.reduce((acc, item) => acc + item.product.price * item.quantity * item.days, 0)
   const serviceFee = Math.round(subtotal * 0.15)
-  const total = subtotal + serviceFee
+  const deposit = items.reduce((acc, item) => acc + item.product.deposit * item.quantity, 0)
+  const total = subtotal + serviceFee + deposit
 
   if (paid) {
     return (
@@ -198,11 +199,18 @@ export function CartView({ items, onBack, onRemoveItem }: CartViewProps) {
                 <span className="text-gray-600">Phí dịch vụ (15%)</span>
                 <span className="font-medium text-gray-800">{formatPrice(serviceFee)}</span>
               </div>
+              <div className="flex justify-between text-sm">
+                <span className="font-semibold text-gray-700">+ Tiền cọc sản phẩm thuê</span>
+                <span className="font-bold text-gray-900">{formatPrice(deposit)}</span>
+              </div>
               <div className="my-2 border-t border-dashed border-gray-200" />
               <div className="flex justify-between items-center">
                 <span className="font-bold text-gray-900">Tổng cộng</span>
                 <span className="text-xl font-bold text-orange-600">{formatPrice(total)}</span>
               </div>
+              <p className="text-[11px] text-gray-400 mt-1">
+                Tiền cọc sẽ được hoàn lại sau khi bạn trả sản phẩm.
+              </p>
             </div>
           </div>
         )}

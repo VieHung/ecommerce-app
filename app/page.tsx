@@ -7,7 +7,7 @@ import { CategoriesSection } from '@/components/categories-section'
 import { ProductGrid } from '@/components/product-grid'
 import { ProductModal } from '@/components/product-modal'
 import { CartView } from '@/components/cart-view'
-import { PRODUCTS } from '@/lib/data'
+import { PRODUCTS, PRICE_MAX } from '@/lib/data'
 import type { Product, CartItem } from '@/lib/data'
 
 export default function HomePage() {
@@ -17,6 +17,12 @@ export default function HomePage() {
   // Search & filter state
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('Tất cả')
+
+  // Advanced filter (price + location)
+  const [filterOpen, setFilterOpen] = useState(false)
+  const [maxPrice, setMaxPrice] = useState(PRICE_MAX)
+  const [location, setLocation] = useState('Tất cả')
+  const filterActive = maxPrice < PRICE_MAX || location !== 'Tất cả'
 
   // Modal state
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
@@ -37,9 +43,20 @@ export default function HomePage() {
       const matchesCategory =
         selectedCategory === 'Tất cả' || p.category === selectedCategory
 
-      return matchesSearch && matchesCategory
+      const matchesPrice = p.price <= maxPrice
+
+      const matchesLocation =
+        location === 'Tất cả' || p.location.startsWith(location)
+
+      return matchesSearch && matchesCategory && matchesPrice && matchesLocation
     })
-  }, [searchQuery, selectedCategory])
+  }, [searchQuery, selectedCategory, maxPrice, location])
+
+  const handleApplyFilter = (price: number, loc: string) => {
+    setMaxPrice(price)
+    setLocation(loc)
+    setFilterOpen(false)
+  }
 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0)
 
@@ -87,6 +104,12 @@ export default function HomePage() {
         onCartOpen={() => setView('cart')}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        filterOpen={filterOpen}
+        onToggleFilter={() => setFilterOpen((o) => !o)}
+        filterActive={filterActive}
+        maxPrice={maxPrice}
+        location={location}
+        onApplyFilter={handleApplyFilter}
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">

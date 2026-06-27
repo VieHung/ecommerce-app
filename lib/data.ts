@@ -19,6 +19,13 @@ export interface CartItem {
   days: number
 }
 
+export interface Review {
+  name: string
+  initials: string
+  rating: number
+  text: string
+}
+
 export const PRODUCTS: Product[] = [
   {
     id: 1,
@@ -79,6 +86,35 @@ export const PRODUCTS: Product[] = [
     deposit: 1000000,
     description:
       'Máy chiếu Epson EB-X05 độ sáng 3200 lumens, độ phân giải XGA, hỗ trợ HDMI và VGA. Thích hợp cho thuyết trình, chiếu phim nhóm và các sự kiện học thuật.',
+  },
+]
+
+// Khu vực dùng cho bộ lọc nâng cao
+export const LOCATIONS = ['Tất cả', 'Cầu Giấy', 'Đống Đa', 'Thanh Xuân']
+
+// Giới hạn thanh trượt giá (đồng/ngày)
+export const PRICE_MIN = 50000
+export const PRICE_MAX = 1000000
+
+// Đánh giá của người thuê trước (hiển thị ở phần chi tiết sản phẩm)
+export const REVIEWS: Review[] = [
+  {
+    name: 'Nguyễn Văn An',
+    initials: 'NA',
+    rating: 5,
+    text: 'Máy rất mới, dùng tốt! Chủ cho thuê thân thiện, sẽ thuê lại lần sau.',
+  },
+  {
+    name: 'Trần Thị Bình',
+    initials: 'TB',
+    rating: 5,
+    text: 'Giao đồ đúng giờ, đóng gói cẩn thận. Giá sinh viên rất hợp lý.',
+  },
+  {
+    name: 'Lê Hoàng Cường',
+    initials: 'LC',
+    rating: 4,
+    text: 'Sản phẩm đúng như mô tả, hoạt động ổn định trong suốt thời gian thuê.',
   },
 ]
 

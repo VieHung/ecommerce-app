@@ -18,7 +18,7 @@ import {
   Package,
 } from 'lucide-react'
 import type { Product, CartItem } from '@/lib/data'
-import { formatPrice } from '@/lib/data'
+import { formatPrice, REVIEWS } from '@/lib/data'
 
 interface ProductModalProps {
   product: Product | null
@@ -44,7 +44,7 @@ export function ProductModal({ product, open, onClose, onAddToCart }: ProductMod
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl w-full p-0 overflow-hidden rounded-2xl border-0 shadow-2xl gap-0 [&>button]:hidden">
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-2xl lg:max-w-4xl xl:max-w-5xl p-0 overflow-hidden rounded-2xl border-0 shadow-2xl gap-0 [&>button]:hidden">
         <DialogTitle className="sr-only">{product.name}</DialogTitle>
 
         {/* Close button */}
@@ -56,9 +56,9 @@ export function ProductModal({ product, open, onClose, onAddToCart }: ProductMod
           <X className="w-4 h-4" />
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 max-h-[90vh] overflow-y-auto md:overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-h-[92vh] md:max-h-[88vh] overflow-y-auto md:overflow-hidden">
           {/* Left: Image */}
-          <div className="relative h-56 md:h-full min-h-[280px] bg-gray-100 md:sticky md:top-0">
+          <div className="relative h-56 sm:h-72 md:h-full md:min-h-[480px] bg-gray-100 md:sticky md:top-0">
             <img
               src={product.image}
               alt={product.name}
@@ -77,10 +77,10 @@ export function ProductModal({ product, open, onClose, onAddToCart }: ProductMod
           </div>
 
           {/* Right: Details */}
-          <div className="p-6 flex flex-col gap-4 overflow-y-auto">
+          <div className="p-5 sm:p-6 lg:p-8 flex flex-col gap-4 lg:gap-5 overflow-y-auto md:max-h-[88vh]">
             {/* Title + Tags */}
             <div>
-              <h2 className="text-xl font-bold text-gray-900 leading-tight">{product.name}</h2>
+              <h2 className="text-xl lg:text-2xl font-bold text-gray-900 leading-tight">{product.name}</h2>
               <div className="flex flex-wrap gap-2 mt-2">
                 <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-green-100">
                   <CheckCircle className="w-3.5 h-3.5" />
@@ -99,12 +99,12 @@ export function ProductModal({ product, open, onClose, onAddToCart }: ProductMod
 
             {/* Price */}
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold text-orange-500">{formatPrice(product.price)}</span>
+              <span className="text-2xl lg:text-3xl font-bold text-orange-500">{formatPrice(product.price)}</span>
               <span className="text-sm text-gray-400">/{product.unit}</span>
             </div>
 
             {/* Description */}
-            <p className="text-sm text-gray-600 leading-relaxed">{product.description}</p>
+            <p className="text-sm lg:text-base text-gray-600 leading-relaxed">{product.description}</p>
 
             {/* Specs table */}
             <div className="rounded-xl border border-gray-100 overflow-hidden">
@@ -125,6 +125,44 @@ export function ProductModal({ product, open, onClose, onAddToCart }: ProductMod
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Reviews from previous renters */}
+            <div>
+              <div className="flex items-center justify-between mb-2.5">
+                <h3 className="text-sm font-bold text-gray-900">Đánh giá từ người thuê trước</h3>
+                <span className="text-xs text-gray-400">{REVIEWS.length} đánh giá</span>
+              </div>
+              <div className="space-y-2.5">
+                {REVIEWS.map((review) => (
+                  <div
+                    key={review.name}
+                    className="bg-gray-50 border border-gray-100 rounded-xl p-3"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+                        <span className="text-orange-600 font-bold text-xs">{review.initials}</span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-800 leading-none">{review.name}</p>
+                        <div className="flex items-center gap-0.5 mt-1.5">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <Star
+                              key={s}
+                              className={`w-3 h-3 ${
+                                s <= review.rating
+                                  ? 'text-yellow-400 fill-yellow-400'
+                                  : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-2 leading-relaxed">{review.text}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Rental controls */}
